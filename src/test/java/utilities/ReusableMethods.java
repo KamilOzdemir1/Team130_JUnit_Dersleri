@@ -1,8 +1,15 @@
 package utilities;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,4 +57,61 @@ public class ReusableMethods {
         }
 
     }
+
+
+    public static void tumSayfaScreenshot (WebDriver driver) {
+
+        // 1- bir TakesScreenShot objesi olusturun ve deger olarak driver'i atayin
+
+        TakesScreenshot tss = (TakesScreenshot) driver;
+
+        // 2- screenshot'i kaydedecegimiz bir dosya olusturalim
+        // screenshot ismini unique yapabilmek icin timestamp ekleyelim
+        LocalDateTime ldt = LocalDateTime.now();
+        DateTimeFormatter zamanFormati = DateTimeFormatter.ofPattern("YYMMddHHmmss");
+        String timeStamp = ldt.format(zamanFormati);
+
+        File tumSayfaScreenshot = new File("target/tumSayfaScreenshot/tumSayfa"+timeStamp+".jpeg");
+
+        // 3- tss objesini kullanarak screenshot alin ve bir File olarak kaydedin
+
+        File geciciDosya = tss.getScreenshotAs(OutputType.FILE);
+
+        // 4- gecici dosyayi deger olarak asil kaydedilecek File'a kopyalayin
+
+        try {
+            FileUtils.copyFile(geciciDosya,tumSayfaScreenshot);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void tumSayfaScreenshot (WebDriver driver, String resimAdi) {
+
+        // 1- bir TakesScreenShot objesi olusturun ve deger olarak driver'i atayin
+
+        TakesScreenshot tss = (TakesScreenshot) driver;
+
+        // 2- screenshot'i kaydedecegimiz bir dosya olusturalim
+
+        File tumSayfaScreenshot = new File("target/tumSayfaScreenshot/"+resimAdi+".jpeg");
+
+        // 3- tss objesini kullanarak screenshot alin ve bir File olarak kaydedin
+
+        File geciciDosya = tss.getScreenshotAs(OutputType.FILE);
+
+        // 4- gecici dosyayi deger olarak asil kaydedilecek File'a kopyalayin
+
+        try {
+            FileUtils.copyFile(geciciDosya,tumSayfaScreenshot);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
+
 }
